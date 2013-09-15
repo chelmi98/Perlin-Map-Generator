@@ -10,6 +10,7 @@ import Image
 import primes
 from perlin import perlin2d
 from random import randint
+from math import sqrt
 
 #seed generation
 if raw_input('Generate seed? y/n')[0]=='y':
@@ -35,4 +36,4 @@ for x in range(256):
         if val<0:val=0
         pixels[x,y]=(val,val,val)
 
-img.show()
+img.save('map.png')
