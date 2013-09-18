@@ -32,31 +32,29 @@ def intropilate2d(x,y,preNoise,seed):
 
     return intropilate(i1,i2,frcY)
 
-def noiseMap(width,height,pointsX,pointsY,seed):
+def noiseMap(w,h,d,seed):
+    i=1.0/d
+    rX=(w/d)+1
+    rY=(h/d)+1
+    l=[]
+
     preNoise=[]
-    for x in range(pointsX):
+    for x in range(rX):
         preNoise.append([])
-        for y in range(pointsY):
+        for y in range(rY):
             preNoise[x].append(noise(x,y,seed))
 
-    l=[]
-    incX=1.0/(width/(pointsX-1))
-    incY=1.0/(height/(pointsY-1))
-    countX=0.0
-    countY=0.0
-    for y in range(pointsY):
-        for y2 in range(height/(pointsY-1)):
-            countY=(y2+(y*(height/(pointsY-1))))*incY
+    for y in range(rY):
+        for y2 in range(d):
             l.append([])
-            for x in range(pointsX):
-                for x2 in range(width/(pointsX-1)):
-                    countX=(x2+(x*(height/(pointsX-1))))*incX
-                    l[y2+(y*(height/(pointsY-1)))].append(int(
-                        intropilate2d(countX,countY,preNoise,seed)*128)+128)
-            l[y2+(y*(height/(pointsY-1)))]=l[y2+(y*(height/(pointsY-1)))][:width]
-    l=l[:height]
+            for x in range(rX):
+                for x2 in range(d):
+                    l[(y*d)+y2].append(
+                        intropilate2d((x2+(x*d))*i,(y2+(y*d))*i,preNoise,seed))
+
     return l
 
+#DONT USE AT THE MOMENT
 def perlin2d(width,height,octaves,seed,limitLow=0,limitHigh=255):
     maps=[]
     xPoints=width

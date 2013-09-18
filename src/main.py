@@ -8,9 +8,12 @@
 
 import Image
 import primes
-from perlin import perlin2d
+import perlin
 from random import randint
 from math import sqrt
+
+width=512
+height=256
 
 #seed generation
 if raw_input('Generate seed? y/n')[0]=='y':
@@ -22,17 +25,17 @@ else:
 
 #image creation and pixel stuff
 print('Generating heightmap...')
-heightMap=perlin2d(256,256,6,seed)
+heightMap=perlin.noiseMap(width,height,16,seed)
 print('Done!')
 
-img=Image.new('RGB',(256,256),'black')
+img=Image.new('RGB',(width,height),'black')
 pixels=img.load()
 
-for x in range(256):
-    for y in range(256):
-        val=heightMap[y][x]
-        dist=int(1.5*(sqrt(abs(128-x)**2+abs(128-y)**2)))
-        val-=dist
+for x in range(width):
+    for y in range(height):
+        val=int(heightMap[y][x]*128)+128
+        ##dist=int(1.5*(sqrt(abs(128-x)**2+abs(128-y)**2)))
+        ##val-=dist
         if val<0:val=0
         pixels[x,y]=(val,val,val)
 
