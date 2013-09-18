@@ -49,28 +49,25 @@ def noiseMap(w,h,d,seed):
             l.append([])
             for x in range(rX):
                 for x2 in range(d):
-                    l[(y*d)+y2].append(
-                        intropilate2d((x2+(x*d))*i,(y2+(y*d))*i,preNoise,seed))
+                    l[(y*d)+y2].append(int(
+                        intropilate2d((x2+(x*d))*i,(y2+(y*d))*i,preNoise,seed)*128)+128)
 
     return l
 
-#DONT USE AT THE MOMENT
 def perlin2d(width,height,octaves,seed,limitLow=0,limitHigh=255):
+    octaves.sort()
     maps=[]
-    xPoints=width
-    yPoints=height
-    for i in range(octaves):
-        maps.append(noiseMap(width,height,xPoints,yPoints,seed))
-        xPoints/=2
-        yPoints/=2
+    for i in octaves:
+        maps.append(noiseMap(width,height,i,seed))
+
     pix=[]
     for y in range(height):
         pix.append([])
         for x in range(width):
             tmp=0
-            for i in range(octaves):
+            for i in range(len(octaves)):
                 tmp+=maps[i][y][x]*(2**i)
-            tmp/=(2**octaves)-1
+            tmp/=(2**len(octaves))-1
             if tmp<limitLow:
                 tmp=limitLow
             elif tmp>limitHigh:

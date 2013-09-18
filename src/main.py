@@ -12,8 +12,9 @@ import perlin
 from random import randint
 from math import sqrt
 
-width=512
+width=256
 height=256
+octaves=[1,2,4,8,16,32]
 
 #seed generation
 if raw_input('Generate seed? y/n')[0]=='y':
@@ -25,7 +26,7 @@ else:
 
 #image creation and pixel stuff
 print('Generating heightmap...')
-heightMap=perlin.noiseMap(width,height,16,seed)
+heightMap=perlin.perlin2d(width,height,octaves,seed)
 print('Done!')
 
 img=Image.new('RGB',(width,height),'black')
@@ -33,10 +34,12 @@ pixels=img.load()
 
 for x in range(width):
     for y in range(height):
-        val=int(heightMap[y][x]*128)+128
-        ##dist=int(1.5*(sqrt(abs(128-x)**2+abs(128-y)**2)))
-        ##val-=dist
+        val=heightMap[y][x]
+
+        dist=int(1.5*(sqrt(abs(128-x)**2+abs(128-y)**2)))
+        val-=dist
         if val<0:val=0
+
         pixels[x,y]=(val,val,val)
 
 img.save('map.png')
