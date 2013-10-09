@@ -32,9 +32,9 @@ print('Done!')
 
 #creates empty coastline
 landMap=[]
-for y in range(width):
+for y in range(height):
     landMap.append([])
-    for x in range(height):
+    for x in range(width):
         landMap[y].append([])
 
 #processing
