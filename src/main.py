@@ -11,19 +11,23 @@ import perlin
 from random import randint
 from math import sqrt
 
-width=256
-height=256
+width=512
+height=512
 octaves=[1,2,4,8,16,32]
 
 threshold=30
+threshold2=40
+threshold3=60
+threshold4=90
+threshold5=145
 
 #seed generation
-if raw_input('Generate seed? y/n ')[0]=='y':
-    seed=primes.nextPrime(randint(10000,50000))
-    print ("The seed is "+str(seed))
-else:
-    seed=primes.nextPrime(int(raw_input('Enter a seed: (numbers only) ')))
-    print ("The seed is "+str(seed))
+##if raw_input('Generate seed? y/n ')[0]=='y':
+seed=primes.nextPrime(randint(10000,50000))
+print ("The seed is "+str(seed))
+##else:
+##    seed=primes.nextPrime(int(raw_input('Enter a seed: (numbers only) ')))
+##    print ("The seed is "+str(seed))
 
 #noise generation
 print('Generating heightmap...')
@@ -43,15 +47,19 @@ for x in range(width):
         val = heightMap[y][x]
 
         #mask creation and aplication
-        dist = int(1.5 * (sqrt(abs(128 - x) ** 2 + abs(128 - y) ** 2)))
+        dist = int(0.8 * (sqrt(abs(256 - x) ** 2 + abs(256 - y) ** 2)))
         val -= dist
         if val < 0: val = 0
         heightMap[y][x] = val
 
         #coastline creation
         val2 = val
-        if val2 < threshold: val2 = (138,210,255)
-        else: val2 = (255,233,161)
+        if val2 < threshold: val2 = (87,148,179)
+        elif val2 < threshold2: val2 = (255,233,161)
+        elif val2 < threshold3: val2 = (135,179,130)
+        elif val2 < threshold4: val2 = (102,150,96)
+        elif val2 < threshold5: val2 = (146,168,179)
+        else: val2 = (255,255,255)
         landMap[y][x] = val2
 
 #image creation
@@ -69,6 +77,6 @@ for x in range(width):
             (val2[1]*(val[1]+50))/255,
             (val2[2]*(val[2]+50))/255
             )
-        pixels[x,y]=val3
+        pixels[x,y]=val2
 
 img.save('map.png')
