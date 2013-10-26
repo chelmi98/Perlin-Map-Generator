@@ -8,12 +8,13 @@
 import Image
 import primes
 import perlin
+import fill
 from random import randint
 from math import sqrt
 
-width=512
-height=512
-octaves=[1,2,4,8,16,32]
+width=256
+height=256
+octaves=[1,2,4,8,16]
 
 threshold=30
 threshold2=40
@@ -30,10 +31,11 @@ print ("The seed is "+str(seed))
 ##    print ("The seed is "+str(seed))
 
 #noise generation
-print('Generating heightmap...')
+print 'Generating heightmap... '
 heightMap=perlin.perlin2d(width,height,octaves,seed)
 print('Done!')
 
+print 'Processing... '
 #creates empty coastline
 landMap=[]
 for y in range(height):
@@ -47,7 +49,7 @@ for x in range(width):
         val = heightMap[y][x]
 
         #mask creation and aplication
-        dist = int(0.8 * (sqrt(abs(256 - x) ** 2 + abs(256 - y) ** 2)))
+        dist = int(2 * (sqrt(abs((width/2) - x) ** 2 + abs((height/2) - y) ** 2)))
         val -= dist
         if val < 0: val = 0
         heightMap[y][x] = val
@@ -62,6 +64,9 @@ for x in range(width):
         else: val2 = (255,255,255)
         landMap[y][x] = val2
 
+landMap=fill.floodFill(landMap,(70,170,170),0,0)
+print('Done!')
+
 #image creation
 img=Image.new('RGB',(width,height),'black')
 pixels=img.load()
@@ -69,14 +74,6 @@ pixels=img.load()
 #map to image
 for x in range(width):
     for y in range(height):
-        val=heightMap[y][x]
-        val=(val,val,val)
-        val2=landMap[y][x]
-        val3=(
-            (val2[0]*(val[0]+50))/255,
-            (val2[1]*(val[1]+50))/255,
-            (val2[2]*(val[2]+50))/255
-            )
-        pixels[x,y]=val2
+        pixels[x,y]=landMap[y][x]
 
 img.save('map.png')
