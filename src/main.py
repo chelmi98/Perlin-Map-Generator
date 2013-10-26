@@ -12,8 +12,8 @@ import fill
 from random import randint
 from math import sqrt
 
-width=256
-height=256
+width=128
+height=128
 octaves=[1,2,4,8,16]
 
 threshold=30
@@ -49,7 +49,7 @@ for x in range(width):
         val = heightMap[y][x]
 
         #mask creation and aplication
-        dist = int(2 * (sqrt(abs((width/2) - x) ** 2 + abs((height/2) - y) ** 2)))
+        dist = int(3 * (sqrt(abs((width/2) - x) ** 2 + abs((height/2) - y) ** 2)))
         val -= dist
         if val < 0: val = 0
         heightMap[y][x] = val
