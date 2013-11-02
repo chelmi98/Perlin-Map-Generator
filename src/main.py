@@ -12,9 +12,11 @@ import fill
 from random import randint
 from math import sqrt
 
-width=128
-height=128
+width=256
+height=256
 octaves=[1,2,4,8,16]
+wrapX=False
+wrapY=False
 
 threshold=30
 threshold2=40
@@ -49,9 +51,19 @@ for x in range(width):
         val = heightMap[y][x]
 
         #mask creation and aplication
-        dist = int(3 * (sqrt(abs((width/2) - x) ** 2 + abs((height/2) - y) ** 2)))
-        val -= dist
+        if not wrapX and not wrapY:
+            mask=((x-(width/2))**2/(width/4))+((y-(height/2))**2/(height/4))
+        elif wrapX and not wrapY:
+            mask=(y-(height/2))**2/(height/4)
+        elif not wrapX and wrapY:
+            mask=(x-(width/2))**2/(width/4)
+        elif wrapX and wrapY:
+            mask=0
+
+        val -= mask
+        val=int(val)
         if val < 0: val = 0
+        if val > 255: val = 255
         heightMap[y][x] = val
 
         #coastline creation
@@ -64,7 +76,7 @@ for x in range(width):
         else: val2 = (255,255,255)
         landMap[y][x] = val2
 
-landMap=fill.floodFill(landMap,(70,170,170),0,0)
+#landMap=fill.floodFill(landMap,(70,170,170),0,0)
 print('Done!')
 
 #image creation
