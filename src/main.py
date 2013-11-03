@@ -12,17 +12,26 @@ import fill
 from random import randint
 from math import sqrt
 
+#generation perameters
 width=256
 height=256
 octaves=[1,2,4,8,16]
 wrapX=False
 wrapY=False
 
-threshold=30
-threshold2=40
-threshold3=60
-threshold4=90
-threshold5=145
+thresholds=[
+        145,
+        90,
+        60,
+        40,
+        30]
+thresholdcolors=[
+        (255,255,255),
+        (146,168,179),
+        (102,150,96),
+        (135,179,130),
+        (255,233,161),
+        (87,148,179)]
 
 #seed generation
 ##if raw_input('Generate seed? y/n ')[0]=='y':
@@ -66,17 +75,20 @@ for x in range(width):
         if val > 255: val = 255
         heightMap[y][x] = val
 
-        #coastline creation
+        #checks height against each threshold in turn
         val2 = val
-        if val2 < threshold: val2 = (87,148,179)
-        elif val2 < threshold2: val2 = (255,233,161)
-        elif val2 < threshold3: val2 = (135,179,130)
-        elif val2 < threshold4: val2 = (102,150,96)
-        elif val2 < threshold5: val2 = (146,168,179)
-        else: val2 = (255,255,255)
+        for i in range(len(thresholds)):
+            if val2 > thresholds[i]+randint(-1,1):
+                val2 = thresholdcolors[i]
+                break
+
+        if val2==val:
+            val2=thresholdcolors[len(thresholdcolors)-1]
+
         landMap[y][x] = val2
 
-#landMap=fill.floodFill(landMap,(70,170,170),0,0)
+#differentiates between sea and other water (disabled for speed)
+##landMap=fill.floodFill(landMap,(70,170,170),0,0)
 print('Done!')
 
 #image creation
