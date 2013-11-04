@@ -5,6 +5,8 @@
 #   and uses a weighted average of them. A mask is then applied.
 #===============================================================================
 
+import sys
+import getopt
 import Image
 import primes
 import perlin
@@ -12,12 +14,31 @@ import fill
 from random import randint
 from math import sqrt
 
-#generation perameters
-width=256
-height=256
-octaves=[1,2,4,8,16]
+#gets parameters if ran from command line
+opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:n:')
+
+#default values
 wrapX=False
 wrapY=False
+width=256
+height=256
+flname='map'
+
+#values if run from cmd
+for o, a in opts:
+    if o == '-x':
+        wrapX = True
+    if o == '-y':
+        wrapY = True
+    if o == '-w':
+        width = int(a)
+    if o == '-h':
+        height = int(a)
+    if o == '-n':
+        flname = a
+
+#generation perameters
+octaves=[1,2,4,8,16]
 
 thresholds=[
         145,
@@ -34,12 +55,8 @@ thresholdcolors=[
         (87,148,179)]
 
 #seed generation
-##if raw_input('Generate seed? y/n ')[0]=='y':
 seed=primes.nextPrime(randint(10000,50000))
 print ("The seed is "+str(seed))
-##else:
-##    seed=primes.nextPrime(int(raw_input('Enter a seed: (numbers only) ')))
-##    print ("The seed is "+str(seed))
 
 #noise generation
 print 'Generating heightmap... '
@@ -100,4 +117,5 @@ for x in range(width):
     for y in range(height):
         pixels[x,y]=landMap[y][x]
 
-img.save('map.png')
+img.save(flname+'.png')
+print('Saved as '+flname+'.png')
