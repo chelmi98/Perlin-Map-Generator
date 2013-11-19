@@ -12,7 +12,7 @@ import primes
 import perlin
 import fill
 from random import randint
-from math import sqrt
+from math import sqrt, sin, degrees, radians
 
 #gets parameters if ran from command line
 opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:n:')
@@ -77,14 +77,17 @@ for x in range(width):
         val = heightMap[y][x]
 
         #mask creation and aplication
+        maskX = (sin(radians((-180.0/width)*x))*255)+255
+        maskY = (sin(radians((-180.0/height)*y))*255)+255
+
         if not wrapX and not wrapY:
-            mask=((x-(width/2))**2/(width/4))+((y-(height/2))**2/(height/4))
+            mask = maskX + maskY
         elif wrapX and not wrapY:
-            mask=(y-(height/2))**2/(height/4)
+            mask = maskY
         elif not wrapX and wrapY:
-            mask=(x-(width/2))**2/(width/4)
+            mask = maskX
         elif wrapX and wrapY:
-            mask=0
+            mask = 0
 
         val -= mask
         val=int(val)
