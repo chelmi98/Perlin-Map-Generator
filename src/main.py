@@ -1,6 +1,6 @@
 #===============================================================================
 #Python Perlin Noise based map generation
-#   This program creates a pseudo-random noise pattern and then smooths it and
+#   This program creates a pseudo-random noise pattern and then
 #   applies a cos based intropilation. It then layers several octaves of noise
 #   and uses a weighted average of them. A mask is then applied.
 #===============================================================================
@@ -8,9 +8,7 @@
 import sys
 import getopt
 import Image
-import primes
 import perlin
-import fill
 from random import randint
 from math import sqrt, sin, degrees, radians
 
@@ -55,15 +53,26 @@ thresholdcolors=[
         (87,148,179)]
 
 #seed generation
-seed=primes.nextPrime(randint(10000,50000))
-print ("The seed is "+str(seed))
+def isPrime(p):
+    if(p == 2): return True
+    if(not(p & 1)): return False
+    return pow(2, p-1, p) == 1
+
+def nextPrime(p):
+    while True:
+        if isPrime(p): break
+        else: p += 1
+    return p
+
+seed=nextPrime(randint(10000,50000))
+print ('The seed is '+str(seed))
 
 #noise generation
-print 'Generating heightmap... '
+print('Generating heightmap...'),
 heightMap=perlin.perlin2d(width,height,octaves,seed)
 print('Done!')
 
-print 'Processing... '
+print('Processing...'),
 #creates empty coastline
 landMap=[]
 for y in range(height):
@@ -77,8 +86,8 @@ for x in range(width):
         val = heightMap[y][x]
 
         #mask creation and aplication
-        maskX = (sin(radians((-180.0/width)*x))*255)+255
-        maskY = (sin(radians((-180.0/height)*y))*255)+255
+        maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
+        maskY = (sin(radians((-180.0 / height) * y)) * 255) + 255
 
         if not wrapX and not wrapY:
             mask = maskX + maskY
@@ -107,9 +116,8 @@ for x in range(width):
 
         landMap[y][x] = val2
 
-#differentiates between sea and other water (disabled for speed)
-##landMap=fill.floodFill(landMap,(70,170,170),0,0)
 print('Done!')
+print('Creating image...'),
 
 #image creation
 img=Image.new('RGB',(width,height),'black')
@@ -121,4 +129,5 @@ for x in range(width):
         pixels[x,y]=landMap[y][x]
 
 img.save(flname+'.png')
+print('Done!')
 print('Saved as '+flname+'.png')
