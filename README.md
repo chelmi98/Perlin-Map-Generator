@@ -1,3 +1,31 @@
 Perlin Map Generator
-====================
-This program is designed to randomly generate terrain heightmaps using Perlin Noise.
+==
+This program is designed to randomly generate maps using Perlin noise. It creates a heightmap, then uses a series of thresholds to designate areas.
+
+Requirements
+--
+To use the program you must have python 2.x and [Python Imaging Library](www.pythonware.com/products/pil).
+
+Usage
+--
+The simplest use is to just run the script.
+
+```
+  python main.py
+```
+  
+You can also use tags to customize the map. For instance:
+
+```
+  python main.py -x -w 512 -h 128
+```
+This will create a map that wraps around the x axis, has a height of 128 pixels and a width of 512.
+
+Full list of tags:
+--
+-x Wraps around the X axis  
+-y Wraps around the Y axis  
+-w [pixels] Sets the width of the image to a specified number of pixels  
+-h [pixels] Sets the height of the image to a specified number of pixels  
+-s [seed] Specifies a seed for the noise generator  
+-f [name] Saves the image as the specified file name (Do not include extesion)
