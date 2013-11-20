@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-#===============================================================================
+#==============================================================================
 #Python Perlin Noise based map generation
 #   This program creates a pseudo-random noise pattern and then
 #   applies a cos based intropilation. It then layers several octaves of noise
 #   and uses a weighted average of them. A mask is then applied.
-#===============================================================================
+#==============================================================================
 
 import sys
 import getopt
@@ -13,15 +13,22 @@ from perlin import perlin2d
 from random import randint
 from math import sqrt, sin, degrees, radians
 
+
 def isPrime(p):
-    if(p == 2): return True
-    if(not(p & 1)): return False
+    if(p == 2):
+        return True
+    if(not(p & 1)):
+        return False
     return pow(2, p-1, p) == 1
+
 
 def nextPrime(p):
     while True:
-        if isPrime(p): return p
-        else: p += 1
+        if isPrime(p):
+            return p
+        else:
+            p += 1
+
 
 def processMap(width, height, srcMap, thresholds, thresholdcolors):
     #creates empty 2d array
@@ -46,9 +53,11 @@ def processMap(width, height, srcMap, thresholds, thresholdcolors):
                 mask = 0
 
             val -= mask
-            val=int(val)
-            if val < 0: val = 0
-            if val > 255: val = 255
+            val = int(val)
+            if val < 0:
+                val = 0
+            if val > 255:
+                val = 255
             srcMap[y][x] = val
 
             #checks height against each threshold in turn
@@ -74,23 +83,18 @@ if __name__ == '__main__':
     wrapY = False
     width = 256
     height = 256
-    seed = nextPrime(randint(10000,50000))
+    seed = nextPrime(randint(10000, 50000))
     flname = 'map'
 
-    octaves=[1,2,4,8,16]
-    thresholds=[
-            145,
-            90,
-            60,
-            40,
-            30]
-    thresholdcolors=[
-            (255,255,255),
-            (146,168,179),
-            (102,150,96),
-            (135,179,130),
-            (255,233,161),
-            (87,148,179)]
+    octaves = [1, 2, 4, 8, 16]
+    thresholds = [145, 90, 60, 40, 30]
+    thresholdcolors = [
+        (255, 255, 255),
+        (146, 168, 179),
+        (102, 150, 96),
+        (135, 179, 130),
+        (255, 233, 161),
+        (87, 148, 179)]
 
     #values if run from command line
     for o, a in opts:
@@ -114,7 +118,7 @@ if __name__ == '__main__':
     print('Done!')
 
     print('Processing...'),
-    landMap = processMap(width,height,heightMap,thresholds,thresholdcolors)
+    landMap = processMap(width, height, heightMap, thresholds, thresholdcolors)
     print('Done!')
 
     print('Creating image...'),
@@ -124,7 +128,7 @@ if __name__ == '__main__':
     #map to image
     for x in xrange(width):
         for y in xrange(height):
-            pixels[x,y] = landMap[y][x]
+            pixels[x, y] = landMap[y][x]
 
     img.save(flname + '.png')
     print('Done!')
