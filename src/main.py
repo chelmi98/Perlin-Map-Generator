@@ -25,15 +25,11 @@ def nextPrime(p):
 
 def processMap(width, height, srcMap, thresholds, thresholdcolors):
     #creates empty 2d array
-    landMap=[]
-    for y in range(height):
-        landMap.append([])
-        for x in range(width):
-            landMap[y].append([])
+    landMap = [[None] * width for __ in xrange(height)]
 
     #processing
-    for x in range(width):
-        for y in range(height):
+    for x in xrange(width):
+        for y in xrange(height):
             val = srcMap[y][x]
 
             #mask creation and aplication
@@ -57,7 +53,7 @@ def processMap(width, height, srcMap, thresholds, thresholdcolors):
 
             #checks height against each threshold in turn
             val2 = val
-            for i in range(len(thresholds)):
+            for i in xrange(len(thresholds)):
                 if val2 > thresholds[i] + randint(-1, 1):
                     val2 = thresholdcolors[i]
                     break
@@ -126,8 +122,8 @@ if __name__ == '__main__':
     pixels = img.load()
 
     #map to image
-    for x in range(width):
-        for y in range(height):
+    for x in xrange(width):
+        for y in xrange(height):
             pixels[x,y] = landMap[y][x]
 
     img.save(flname + '.png')
