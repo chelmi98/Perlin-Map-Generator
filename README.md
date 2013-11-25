@@ -1,10 +1,14 @@
 Perlin Map Generator
 ==
-This program is designed to randomly generate maps using Perlin noise. It creates a heightmap, then uses a series of thresholds to designate areas.
+This program is designed to randomly generate maps using Perlin noise. It creates a heightmap, then uses a series of thresholds to designate areas. The image is then saved as a .png in the current directory.
 
 Requirements
 --
-To use the program you must have python 2.x and [Python Imaging Library](www.pythonware.com/products/pil).
+To use the program you must have Python 2.x and [Python Imaging Library](www.pythonware.com/products/pil). For linux you can get the library with
+```
+  sudo apt-get install python-imaging
+```
+Otherwise, go to the above link and download an installer.
 
 Usage
 --
