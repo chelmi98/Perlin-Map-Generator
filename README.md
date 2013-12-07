@@ -38,9 +38,9 @@ python main.py -x -w 512 -h 128
 This will create a map that wraps around the x axis, has a height of 128 pixels and a width of 512.
 
 ###Full list of tags
--x Wraps the terrain around the X axis  
--y Wraps the terrain around the Y axis  
--w [width] Sets the width of the image to specified number of pixels  
--h [height] Sets the height of the image to specified number of pixels  
--s [seed] Specifies a seed for the noise generator  
--f [name] Saves the image as the specified file name
+`-x` Wraps the terrain around the X axis  
+`-y` Wraps the terrain around the Y axis  
+`-w [width]` Sets the width of the image to specified number of pixels  
+`-h [height]` Sets the height of the image to specified number of pixels  
+`-s [seed]` Specifies a seed for the noise generator  
+`-f [name]` Saves the image as the specified file name
