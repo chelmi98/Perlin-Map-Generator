@@ -12,6 +12,7 @@ import Image
 from perlin import perlin2d
 from random import randint
 from math import sqrt, sin, degrees, radians
+from string import ascii_letters, digits
 
 
 def isPrime(p):
@@ -75,8 +76,19 @@ def processMap(width, height, srcMap, thresholds, thresholdcolors):
     return landMap
 
 if __name__ == '__main__':
+    #variables
+    validExtentions = ['.png', '.jpg', '.jpeg', '.jpe', '.bmp', '.gif']
+    validChars = "-_.() %s%s" % (ascii_letters, digits)
+
     #gets parameters if ran from command line
-    opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:s:n:')
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:s:n:')
+    except getopt.GetoptError:
+        print('ERROR: Invalid option')
+        sys.exit()
+    except:
+        print('Unexpected error parsing options')
+        sys.exit()
 
     #default values
     wrapX = False
@@ -84,7 +96,7 @@ if __name__ == '__main__':
     width = 256
     height = 256
     seed = nextPrime(randint(10000, 50000))
-    flname = 'map'
+    flname = 'map.png'
 
     octaves = [1, 2, 4, 8, 16]
     thresholds = [145, 90, 60, 40, 30]
@@ -96,22 +108,45 @@ if __name__ == '__main__':
         (255, 233, 161),
         (87, 148, 179)]
 
-    #values if run from command line
+    #sets values if run from command line
     for o, a in opts:
         if o == '-x':
             wrapX = True
+
         if o == '-y':
             wrapY = True
+
         if o == '-w':
-            width = int(a)
+            try:
+                width = int(a)
+            except ValueError:
+                print('ERROR: -w [width] must be an integer')
+                sys.exit()
+
         if o == '-h':
-            height = int(a)
+            try:
+                height = int(a)
+            except ValueError:
+                print('ERROR: -h [height] must be an integer')
+                sys.exit()
+
         if o == '-s':
-            seed = int(a)
+            try:
+                seed = int(a)
+            except ValueError:
+                print('ERROR: -s [seed] must be an integer')
+                sys.exit()
+            print ('The seed is %s' % (str(seed)))
+
         if o == '-n':
             flname = a
-
-    print ('The seed is %s' % (str(seed)))
+            for c in flname:
+                if c not in validChars:
+                    print('ERROR: Filename cannot contain special characters')
+                    sys.exit()
+            if not flname[flname.index('.'):] in validExtentions:
+                print('ERROR: Filename must contain a valid image extention')
+                sys.exit()
 
     print('Generating heightmap...'),
     heightMap = perlin2d(width, height, octaves, seed)
@@ -130,6 +165,6 @@ if __name__ == '__main__':
         for y in xrange(height):
             pixels[x, y] = landMap[y][x]
 
-    img.save(flname + '.png')
+    img.save(flname)
     print('Done!')
-    print('Saved as ' + flname + '.png')
+    print('Saved as ' + flname)
