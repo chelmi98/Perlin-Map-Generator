@@ -56,6 +56,7 @@ def processMap(width, height, wrapX, wrapY, srcMap, thrshlds, thrshldcColors):
 
     return landMap
 
+
 def main():
     #variables
     validExtentions = ['.png', '.jpg', '.jpeg', '.jpe', '.bmp', '.gif']
@@ -151,6 +152,7 @@ def main():
     img.save(flname)
     print('Done!')
     print('Saved as ' + flname)
+
 
 if __name__ == '__main__':
     main()

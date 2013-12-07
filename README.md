@@ -22,7 +22,7 @@ brew install python-imaging
 Otherwise, go to the above link and download an installer.
 
 ###Downloading
-Once you have all of the requirements installed, click [here](https://github.com/chelmi98/Perlin-Map-Generator/archive/master.zip) to download the project. Unzip it, then navigate to the script in the terminal.
+Once you have all of the requirements installed, click [here](https://github.com/chelmi98/Perlin-Map-Generator/archive/master.zip) to download the project. Unzip it, then open the directory in the terminal.
 
 ###Running
 The simplest use is to just run the script.
