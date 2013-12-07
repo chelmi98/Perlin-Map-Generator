@@ -31,7 +31,7 @@ def nextPrime(p):
             p += 1
 
 
-def processMap(width, height, srcMap, thresholds, thresholdcolors):
+def processMap(width, height, wrapX, wrapY, srcMap, thrshlds, thrshldcColors):
     #creates empty 2d array
     landMap = [[None] * width for __ in xrange(height)]
 
@@ -41,19 +41,16 @@ def processMap(width, height, srcMap, thresholds, thresholdcolors):
             val = srcMap[y][x]
 
             #mask creation and aplication
-            maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
-            maskY = (sin(radians((-180.0 / height) * y)) * 255) + 255
+            if not wrapX:
+                maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
+            else:
+                maskX = 0
+            if not wrapY:
+                maskY = (sin(radians((-180.0 / height) * y)) * 255) + 255
+            else:
+                maskY = 0
 
-            if not wrapX and not wrapY:
-                mask = maskX + maskY
-            elif wrapX and not wrapY:
-                mask = maskY
-            elif not wrapX and wrapY:
-                mask = maskX
-            elif wrapX and wrapY:
-                mask = 0
-
-            val -= mask
+            val -= maskX + maskY
             val = int(val)
             if val < 0:
                 val = 0
@@ -63,19 +60,19 @@ def processMap(width, height, srcMap, thresholds, thresholdcolors):
 
             #checks height against each threshold in turn
             val2 = val
-            for i in xrange(len(thresholds)):
-                if val2 > thresholds[i] + randint(-1, 1):
-                    val2 = thresholdcolors[i]
+            for i in xrange(len(thrshlds)):
+                if val2 > thrshlds[i] + randint(-1, 1):
+                    val2 = thrshldcColors[i]
                     break
 
             if val2 == val:
-                val2 = thresholdcolors[len(thresholdcolors) - 1]
+                val2 = thrshldcColors[len(thrshldcColors) - 1]
 
             landMap[y][x] = val2
 
     return landMap
 
-if __name__ == '__main__':
+def main():
     #variables
     validExtentions = ['.png', '.jpg', '.jpeg', '.jpe', '.bmp', '.gif']
     validChars = "-_.() %s%s" % (ascii_letters, digits)
@@ -99,8 +96,8 @@ if __name__ == '__main__':
     flname = 'map.png'
 
     octaves = [1, 2, 4, 8, 16]
-    thresholds = [145, 90, 60, 40, 30]
-    thresholdcolors = [
+    thrshlds = [145, 90, 60, 40, 30]
+    thrshldcColors = [
         (255, 255, 255),
         (146, 168, 179),
         (102, 150, 96),
@@ -153,7 +150,8 @@ if __name__ == '__main__':
     print('Done!')
 
     print('Processing...'),
-    landMap = processMap(width, height, heightMap, thresholds, thresholdcolors)
+    landMap = processMap(width, height, wrapX, wrapY,
+                         heightMap, thrshlds, thrshldcColors)
     print('Done!')
 
     print('Creating image...'),
@@ -168,3 +166,6 @@ if __name__ == '__main__':
     img.save(flname)
     print('Done!')
     print('Saved as ' + flname)
+
+if __name__ == '__main__':
+    main()
