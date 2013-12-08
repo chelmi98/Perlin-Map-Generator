@@ -1,14 +1,15 @@
 #!/usr/bin/env python
-#==============================================================================
-#Python Perlin Noise based map generation
-#   This program creates a pseudo-random noise pattern and then
-#   applies a cos based intropilation. It then layers several octaves of noise
-#   and uses a weighted average of them. A mask is then applied.
-#==============================================================================
+'''
+Python Perlin Noise based map generation
+    This program creates a pseudo-random noise pattern and then
+    applies a cos based intropilation. It then layers several octaves of noise
+    and uses a weighted average of them. A mask is then applied.
+'''
 
 import sys
 import getopt
 import Image
+import datetime
 from perlin import perlin2d
 from random import randint
 from math import sin, radians
@@ -131,6 +132,8 @@ def main():
 
     print ('The seed is %i' % seed)
 
+    start = datetime.datetime.now()
+
     print('Generating heightmap...'),
     heightMap = perlin2d(width, height, octaves, seed)
     print('Done!')
@@ -153,6 +156,9 @@ def main():
     print('Done!')
     print('Saved as ' + flname)
 
+    #prints the duration the program ran
+    duration = datetime.datetime.now() - start
+    print('%im %is' % (duration.seconds/60 % 60, duration.seconds))
 
 if __name__ == '__main__':
     main()
