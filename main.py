@@ -16,6 +16,22 @@ from math import sin, radians
 from string import ascii_letters, digits
 
 
+def isPrime(p):
+    if(p == 2):
+        return True
+    if(not(p & 1)):
+        return False
+    return pow(2, p-1, p) == 1
+
+
+def nextPrime(p):
+    while True:
+        if isPrime(p):
+            return p
+        else:
+            p += 1
+
+
 def processMap(width, height, wrapX, wrapY, srcMap, thrshlds, thrshldcColors):
     #creates empty 2d array
     landMap = [[None] * width for __ in xrange(height)]
@@ -78,7 +94,7 @@ def main():
     wrapY = False
     width = 256
     height = 256
-    seed = randint(10000, 100000000)
+    seed = nextPrime(randint(10000, 100000000))
     flname = 'map.png'
 
     octaves = [1, 2, 4, 8, 16]
@@ -119,6 +135,7 @@ def main():
             except ValueError:
                 print('ERROR: -s [seed] must be an integer')
                 sys.exit()
+            seed = nextPrime(seed)
 
         if o == '-n':
             flname = a

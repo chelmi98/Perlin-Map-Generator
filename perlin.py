@@ -1,4 +1,4 @@
-from math import cos, pi, sqrt
+from math import cos, pi
 
 
 #generates rnd number based on seed and coords
@@ -18,9 +18,7 @@ def intropilate(a, b, x):
 #intropilate on a 2d plane
 def intropilate2d(x, y, preNoise, seed):
     intX = int(x)
-    frcX = x - intX
     intY = int(y)
-    frcY = y - intY
 
     try:
         v1 = preNoise[intX][intY]
@@ -36,26 +34,21 @@ def intropilate2d(x, y, preNoise, seed):
         v3 = noise(intX, intY + 1, seed)
         v4 = noise(intX+1, intY + 1, seed)
 
-    i1 = intropilate(v1, v2, frcX)
-    i2 = intropilate(v3, v4, frcX)
+    i1 = intropilate(v1, v2, x - intX)
+    i2 = intropilate(v3, v4, x - intX)
 
-    return intropilate(i1, i2, frcY)
+    return intropilate(i1, i2, y - intY)
 
 
 #creates a 2d array using inropilate 2d
 def noiseMap(w, h, d, seed):
-    #variables
-    i = 1.0/d
-    rX = (w/d) + 1
-    rY = (h/d) + 1
+    i = 1.0 / d
+    rX = (w / d) + 1
+    rY = (h / d) + 1
     l = []
 
     #pre-generates a array of noise
-    preNoise = []
-    for x in xrange(rX):
-        preNoise.append([])
-        for y in xrange(rY):
-            preNoise[x].append(noise(x, y, seed))
+    preNoise = [[noise(x, y, seed) for y in xrange(rY)] for x in xrange(rX)]
 
     #actually makes the array
     for y in xrange(rY):
@@ -72,32 +65,19 @@ def noiseMap(w, h, d, seed):
 
 
 #creates several noise maps and layers them based on octave list
-def perlin2d(width, height, octaves, seed, limitLow=0, limitHigh=255):
-    #prep
+def perlin2d(width, height, octaves, seed):
     octaves.sort()
 
     #creates a list of all noise maps specified
-    maps = []
-    for i in octaves:
-        maps.append(noiseMap(width, height, i, seed))
+    maps = [noiseMap(width, height, i, seed) for i in octaves]
 
     #combines those maps
     pix = []
     for y in xrange(height):
         pix.append([])
         for x in xrange(width):
-            #actuall combination
-            tmp = 0
-            for i in xrange(len(octaves)):
-                tmp += maps[i][y][x] * (2 ** i)
-            tmp /= (2 ** len(octaves)) - 1
-
-            #catches overflow
-            if tmp < limitLow:
-                tmp = limitLow
-            elif tmp > limitHigh:
-                tmp = limitHigh
-
+            tmp = sum([i[y][x] * (2 ** maps.index(i)) for i in maps])
+            tmp /= (2 ** len(maps)) - 1
             pix[y].append(tmp)
 
     return pix
