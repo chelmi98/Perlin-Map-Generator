@@ -175,7 +175,7 @@ def main():
 
     #prints the duration the program ran
     duration = datetime.datetime.now() - start
-    print('%im %is' % (duration.seconds/60 % 60, duration.seconds))
+    print('%im %is' % (duration.seconds / 60, duration.seconds % 60))
 
 if __name__ == '__main__':
     main()
