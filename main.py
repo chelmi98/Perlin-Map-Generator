@@ -2,7 +2,7 @@
 '''
 Python Perlin Noise based map generation
     This program creates a pseudo-random noise pattern and then
-    applies a cos based intropilation. It then layers several octaves of noise
+    applies a cos based interpolation. It then layers several octaves of noise
     and uses a weighted average of them. A mask is then applied.
 '''
 
@@ -41,7 +41,7 @@ def processMap(width, height, wrapX, wrapY, srcMap, thrshlds, thrshldcColors):
         for y in xrange(height):
             val = srcMap[y][x]
 
-            #mask creation and aplication
+            #mask creation and application
             if not wrapX:
                 maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
             else:
