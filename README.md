@@ -1,28 +1,40 @@
 Perlin Map Generator
 ==
-This program is designed to randomly generate maps using Perlin noise. It creates a heightmap, then uses a series of thresholds to designate areas. The image is then saved as a .png in the current directory.
+This program is designed to randomly generate maps using Perlin noise. It creates a heightmap, then uses a series of thresholds to designate areas. It then saves it as an image file in the current directory.
 
-##Usage
+Usage
+-----
 ###Requirements
-To run the script you must have Python 2.x and [PIL (Python Imaging Library)](www.pythonware.com/products/pil). For linux you can get PIL with
+To run the script you must have Python 2.x and PIL (Python Imaging Library).
 
+####Linux
+To install PIL on Linux, just use
 ```
 sudo apt-get install python-imaging
 ```
-For mac you need to install Homebrew first.
 
+####Mac
+For mac you need to install Homebrew first.
 ```
 ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go/install)"
 ```
 Then you can run the following to install PIL.
-
 ```
 brew install python-imaging
 ```
-Otherwise, go to the above link and download an installer.
+
+####Windows
+For Windows, if you have pip, just use
+```
+pip install PIL
+```
+Otherwise, go to http://www.pythonware.com/products/pil/ and download an installer.
 
 ###Downloading
-Once you have all of the requirements installed, click [here](https://github.com/chelmi98/Perlin-Map-Generator/archive/master.zip) to download the project. Unzip it, then open the directory in the terminal.
+Once you have all of the requirements installed, go to https://github.com/chelmi98/Perlin-Map-Generator/archive/master.zip to download the project. Unzip it, then open the directory in the terminal. Alternately, if you have git just use
+```
+git clone https://github.com/chelmi98/Perlin-Map-Generator.git
+```
 
 ###Running
 The simplest use is to just run the script.
