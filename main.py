@@ -161,8 +161,14 @@ def main():
             if cnfgname[cnfgname.index('.'):].lower() != '.json':
                 print('ERROR: Configuration file must be a JSON file.')
                 sys.exit()
-
-    config = loadJson(os.path.join(os.path.curdir, 'templates', cnfgname))
+    try:
+        config = loadJson(os.path.join(os.path.curdir, 'templates', cnfgname))
+    except IOError:
+        print('ERROR: Configuration file does not exist')
+        sys.exit()
+    except ValueError:
+        print('ERROR: JSON file is incorrectly formatted')
+        sys.exit()
 
     print ('The seed is %i' % seed)
 
