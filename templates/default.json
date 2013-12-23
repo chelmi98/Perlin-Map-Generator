@@ -1,0 +1,30 @@
+{
+	"thresholds": [
+		{
+			"name": "snow",
+			"height": 170,
+			"color": [255, 255, 255]
+		},
+		{
+			"name": "mountain",
+			"height": 120,
+			"color": [146, 168, 179]
+		},
+		{
+			"name": "trees",
+			"height": 80,
+			"color": [102, 150, 96]
+		},
+		{
+			"name": "grass",
+			"height": 40,
+			"color": [135, 179, 130]
+		},
+		{
+			"name": "beach",
+			"height": 30,
+			"color": [255, 233, 161]
+		}
+	],
+	"baseColor":  [87, 148, 179]
+}

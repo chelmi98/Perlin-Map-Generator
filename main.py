@@ -10,6 +10,8 @@ import sys
 import getopt
 import Image
 import datetime
+import json
+import os
 from perlin import perlin2d
 from random import randint
 from math import sin, radians
@@ -32,7 +34,17 @@ def nextPrime(p):
             p += 1
 
 
-def processMap(width, height, wrapX, wrapY, srcMap, thrshlds, thrshldcColors):
+def loadJson(path):
+    f = open(path)
+    j = json.load(f)
+    f.close()
+    return j
+
+
+def processMap(srcMap, config, wrapX, wrapY):
+    height = len(srcMap)
+    width = len(srcMap[0])
+
     #creates empty 2d array
     landMap = [[None] * width for __ in xrange(height)]
 
@@ -61,13 +73,13 @@ def processMap(width, height, wrapX, wrapY, srcMap, thrshlds, thrshldcColors):
 
             #checks height against each threshold in turn
             val2 = val
-            for i in xrange(len(thrshlds)):
-                if val2 > thrshlds[i] + randint(-1, 1):
-                    val2 = thrshldcColors[i]
+            for i in xrange(len(config['thresholds'])):
+                if val2 > config['thresholds'][i]['height'] + randint(-1, 1):
+                    val2 = tuple(config['thresholds'][i]['color'])
                     break
 
             if val2 == val:
-                val2 = thrshldcColors[len(thrshldcColors) - 1]
+                val2 = tuple(config['baseColor'])
 
             landMap[y][x] = val2
 
@@ -81,7 +93,7 @@ def main():
 
     #gets parameters if ran from command line
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:s:n:')
+        opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:s:n:c:')
     except getopt.GetoptError:
         print('ERROR: Invalid option')
         sys.exit()
@@ -96,16 +108,9 @@ def main():
     height = 256
     seed = nextPrime(randint(10000, 100000000))
     flname = 'map.png'
+    cnfgname = 'default.json'
 
     octaves = [1, 2, 4, 8, 16]
-    thrshlds = [145, 90, 60, 40, 30]
-    thrshldcColors = [
-        (255, 255, 255),
-        (146, 168, 179),
-        (102, 150, 96),
-        (135, 179, 130),
-        (255, 233, 161),
-        (87, 148, 179)]
 
     #sets values if run from command line
     for o, a in opts:
@@ -143,12 +148,31 @@ def main():
                 if c not in validChars:
                     print('ERROR: Filename cannot contain special characters')
                     sys.exit()
-            if not flname[flname.index('.'):] in validExtentions:
+            if not flname[flname.index('.'):].lower() in validExtentions:
                 print('ERROR: Filename must contain a valid image extention')
                 sys.exit()
 
+        if o == '-c':
+            cnfgname = a
+            for c in cnfgname:
+                if c not in validChars:
+                    print('ERROR: Filename cannot contain special characters')
+                    sys.exit()
+            if cnfgname[cnfgname.index('.'):].lower() != '.json':
+                print('ERROR: Configuration file must be a JSON file.')
+                sys.exit()
+    try:
+        config = loadJson(os.path.join(os.path.curdir, 'templates', cnfgname))
+    except IOError:
+        print('ERROR: Configuration file does not exist')
+        sys.exit()
+    except ValueError:
+        print('ERROR: JSON file is incorrectly formatted')
+        sys.exit()
+
     print ('The seed is %i' % seed)
 
+    #starts the timer
     start = datetime.datetime.now()
 
     print('Generating heightmap...'),
@@ -156,8 +180,7 @@ def main():
     print('Done!')
 
     print('Processing...'),
-    landMap = processMap(width, height, wrapX, wrapY,
-                         heightMap, thrshlds, thrshldcColors)
+    landMap = processMap(heightMap, config, wrapX, wrapY)
     print('Done!')
 
     print('Creating image...'),
