@@ -52,7 +52,7 @@ This will create a map that wraps around the x axis, has a height of 128 pixels 
 ###Full list of tags
 `-x` Wraps the terrain around the X axis  
 `-y` Wraps the terrain around the Y axis  
-`-r` Enabels raw height output
+`-r` Enables raw height output  
 `-w [width]` Sets the width of the image to specified number of pixels  
 `-h [height]` Sets the height of the image to specified number of pixels  
 `-s [seed]` Specifies a seed for the noise generator  
