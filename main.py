@@ -120,7 +120,7 @@ def main():
 
     #gets parameters if ran from command line
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'xyrw:h:s:n:c:')
+        opts, args = getopt.getopt(sys.argv[1:], 'xyrw:h:o:s:n:c:')
     except getopt.GetoptError:
         print('ERROR: Invalid option')
         sys.exit()
@@ -134,11 +134,10 @@ def main():
     raw = False
     width = 256
     height = 256
+    octaves = [1, 2, 4, 8, 16]
     seed = nextPrime(randint(10000, 100000000))
     flname = 'map.png'
     cnfgname = 'default.json'
-
-    octaves = [1, 2, 4, 8, 16]
 
     #sets values if run from command line
     for o, a in opts:
@@ -163,6 +162,13 @@ def main():
                 height = int(a)
             except ValueError:
                 print('ERROR: -h [height] must be an integer')
+                sys.exit()
+
+        if o == '-o':
+            try:
+                octaves = [2**i for i in range(int(a))]
+            except ValueError:
+                print('ERROR: -o [octaves] must be an integer')
                 sys.exit()
 
         if o == '-s':
@@ -192,6 +198,7 @@ def main():
             if cnfgname[cnfgname.index('.'):].lower() != '.json':
                 print('ERROR: Configuration file must be a JSON file.')
                 sys.exit()
+
     try:
         config = loadJson(os.path.join(os.path.curdir, 'templates', cnfgname))
     except IOError:
