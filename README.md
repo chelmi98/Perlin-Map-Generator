@@ -1,6 +1,6 @@
 Perlin Map Generator
 ==
-This program is designed to randomly generate maps using Perlin noise. It creates a heightmap, then uses a series of thresholds to designate areas. It then saves it as an image file in the current directory.
+This program is designed to randomly generate maps using Perlin noise. It creates a height map, then uses a series of thresholds to designate areas. It then saves it as an image file in the current directory.
 
 Usage
 -----
@@ -55,4 +55,4 @@ This will create a map that wraps around the x axis, has a height of 128 pixels 
 `-w [width]` Sets the width of the image to specified number of pixels  
 `-h [height]` Sets the height of the image to specified number of pixels  
 `-s [seed]` Specifies a seed for the noise generator  
-`-f [name]` Saves the image as the specified file name
+`-n [name]` Saves the image as the specified file name
