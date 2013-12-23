@@ -41,47 +41,74 @@ def loadJson(path):
     return j
 
 
-def processMap(srcMap, config, wrapX, wrapY):
+def processMap(srcMap, config, wrapX, wrapY, raw):
     height = len(srcMap)
     width = len(srcMap[0])
+    thresholds = config['thresholds']
 
     #creates empty 2d array
     landMap = [[None] * width for __ in xrange(height)]
 
-    #processing
-    for x in xrange(width):
-        for y in xrange(height):
-            val = srcMap[y][x]
+    if not raw:
+        #processes thresholds
+        for x in xrange(width):
+            for y in xrange(height):
+                val = srcMap[y][x]
 
-            #mask creation and application
-            if not wrapX:
-                maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
-            else:
-                maskX = 0
-            if not wrapY:
-                maskY = (sin(radians((-180.0 / height) * y)) * 255) + 255
-            else:
-                maskY = 0
+                #mask creation and application
+                if not wrapX:
+                    maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
+                else:
+                    maskX = 0
+                if not wrapY:
+                    maskY = (sin(radians((-180.0 / height) * y)) * 255) + 255
+                else:
+                    maskY = 0
 
-            val -= maskX + maskY
-            val = int(val)
-            if val < 0:
-                val = 0
-            if val > 255:
-                val = 255
-            srcMap[y][x] = val
+                val -= maskX + maskY
+                val = int(val)
+                if val < 0:
+                    val = 0
+                if val > 255:
+                    val = 255
+                srcMap[y][x] = val
 
-            #checks height against each threshold in turn
-            val2 = val
-            for i in xrange(len(config['thresholds'])):
-                if val2 > config['thresholds'][i]['height'] + randint(-1, 1):
-                    val2 = tuple(config['thresholds'][i]['color'])
-                    break
+                #checks height against each threshold in turn
+                val2 = val
+                for i in xrange(len(thresholds)):
+                    if val2 > thresholds[i]['height'] + randint(-1, 1):
+                        val2 = tuple(thresholds[i]['color'])
+                        break
 
-            if val2 == val:
-                val2 = tuple(config['baseColor'])
+                if val2 == val:
+                    val2 = tuple(config['baseColor'])
 
-            landMap[y][x] = val2
+                landMap[y][x] = val2
+
+    else:
+        #processes raw
+        for x in xrange(height):
+            for y in xrange(width):
+                val = srcMap[y][x]
+
+                #mask creation and application
+                if not wrapX:
+                    maskX = (sin(radians((-180.0 / width) * x)) * 255) + 255
+                else:
+                    maskX = 0
+                if not wrapY:
+                    maskY = (sin(radians((-180.0 / height) * y)) * 255) + 255
+                else:
+                    maskY = 0
+
+                val -= maskX + maskY
+                val = int(val)
+                if val < 0:
+                    val = 0
+                if val > 255:
+                    val = 255
+
+                landMap[y][x] = (val, val, val)
 
     return landMap
 
@@ -93,7 +120,7 @@ def main():
 
     #gets parameters if ran from command line
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'xyw:h:s:n:c:')
+        opts, args = getopt.getopt(sys.argv[1:], 'xyrw:h:s:n:c:')
     except getopt.GetoptError:
         print('ERROR: Invalid option')
         sys.exit()
@@ -104,6 +131,7 @@ def main():
     #default values
     wrapX = False
     wrapY = False
+    raw = False
     width = 256
     height = 256
     seed = nextPrime(randint(10000, 100000000))
@@ -119,6 +147,9 @@ def main():
 
         if o == '-y':
             wrapY = True
+
+        if o == '-r':
+            raw = True
 
         if o == '-w':
             try:
@@ -180,7 +211,7 @@ def main():
     print('Done!')
 
     print('Processing...'),
-    landMap = processMap(heightMap, config, wrapX, wrapY)
+    landMap = processMap(heightMap, config, wrapX, wrapY, raw)
     print('Done!')
 
     print('Creating image...'),
