@@ -8,10 +8,10 @@ Python Perlin Noise based map generation
 
 import sys
 import getopt
-import Image
 import datetime
 import json
 import os
+from PIL import Image
 from perlin import perlin2d
 from random import randint
 from math import sin, radians
